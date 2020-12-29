@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from bottle import Bottle, run, route, static_file, request, post
-import os, scan
-from urllib.request import urlopen
+import os
+import scan
 from urllib.parse import urlparse, urljoin
-from bs4 import BeautifulSoup
+from urllib.request import urlopen
+
+from bottle import Bottle, run, static_file, request
 from requests_html import HTMLSession
 
 app = Bottle()
