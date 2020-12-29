@@ -113,14 +113,14 @@ def process_xss():
     data = {}
     for input_tag in form_details["inputs"]:
         if input_tag["type"] == "text":
-            data[input_tag["name"]] = '<p id="' + str(random.randint(0, 100)) + '">scan_xss:' + str(
-                random.randint(0, 100)) + '</p>'
+            num = str(random.randint(0, 100))
+            data[input_tag["name"]] = '<p id="' + num + '">scan_xss:' + num + '</p>'
         elif input_tag["type"] == "hidden":
             data[input_tag["name"]] = input_tag["value"]
 
     # join the url with the action (form request URL)
     url_target = urljoin(url, form_details["action"])
-    print(url_target)
+    print(data)
 
     res = session.post(url_target, data=data)
 
