@@ -73,6 +73,7 @@ def process_scan():
     os.system("sqlmap --purge")
     return result
 
+
 @app.post('/process_xss')
 def process_xss():
     # get url from POST method
@@ -97,7 +98,6 @@ def process_xss():
     if code != 200:
         return 'Invalid target or offline'
 
-
     # initialize an HTTP session
     session = HTMLSession()
 
@@ -110,7 +110,7 @@ def process_xss():
     # iterate over forms
     for i, form in enumerate(forms, start=1):
         form_details = get_form_details(form)
-        #print("=" * 50, f"form #{i}", "=" * 50)
+        # print("=" * 50, f"form #{i}", "=" * 50)
         print(form_details)
 
 
@@ -137,5 +137,6 @@ def get_form_details(form):
     details["method"] = method
     details["inputs"] = inputs
     return details
+
 
 run(app, host='0.0.0.0', port=2323, debug=True)
