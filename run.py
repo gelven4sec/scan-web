@@ -120,6 +120,7 @@ def process_xss():
 
     # join the url with the action (form request URL)
     url_target = urljoin(url, form_details["action"])
+    print(url_target)
 
     res = session.post(url_target, data=data)
 
