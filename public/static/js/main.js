@@ -22,10 +22,10 @@ function process() {
 
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send("url="+text);
-	load_gif()
 
     let result = document.getElementById('result');
     result.innerHTML = "Waiting for process...";
+    load_gif();
 
 
   } else {
