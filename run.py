@@ -109,20 +109,23 @@ def process_xss():
     form = soup.find_all("form")[0]
     form_details = get_form_details(form)
 
+    num = str(random.randint(0, 100))
     # the data body we want to submit
     data = {}
     for input_tag in form_details["inputs"]:
         if input_tag["type"] == "text":
-            num = str(random.randint(0, 100))
             data[input_tag["name"]] = '<p id="' + num + '">scan_xss:' + num + '</p>'
         elif input_tag["type"] == "hidden":
             data[input_tag["name"]] = input_tag["value"]
 
     # join the url with the action (form request URL)
     url_target = urljoin(url, form_details["action"])
-    print(data)
 
     res = session.post(url_target, data=data)
+
+    soup = BeautifulSoup(res.content, "html.parser")
+    for p in soup.find_all("p"):
+        print(p.attrs)
 
     return "DEBUG"
 
