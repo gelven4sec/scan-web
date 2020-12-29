@@ -125,9 +125,10 @@ def process_xss():
 
     soup = BeautifulSoup(res.content, "html.parser")
     for p in soup.find_all("p"):
-        print(p.attrs)
+        if p.attrs["id"] == num:
+            return "Target VULNERABLE to XSS injection !\r\nThe following tag has been injected:\r\n" + '<p id="' + num + '">scan_xss:' + num + '</p>'
 
-    return "DEBUG"
+    return "Target NOT VULNERABLE to XSS injection !"
 
 
 def get_form_details(form):
