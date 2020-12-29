@@ -8,6 +8,7 @@ from urllib.request import urlopen
 
 from bottle import Bottle, run, static_file, request
 from requests_html import HTMLSession
+from bs4 import BeautifulSoup
 
 app = Bottle()
 

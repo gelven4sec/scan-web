@@ -1,10 +1,11 @@
 import os
 import scan
-from urllib.parse import urlparse, urljoin
+#from urllib.parse import urlparse, urljoin
 #from urllib.request import urlopen
 
 from bottle import Bottle, run, static_file, request
 from requests_html import HTMLSession
+from bs4 import BeautifulSoup
 
 
 def get_url():
