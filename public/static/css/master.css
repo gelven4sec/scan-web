@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 *{
   box-sizing: border-box;
@@ -6,22 +6,35 @@
 
 body{
   margin: 0;
-  background-image: url('../img/159685.jpg');
+  background-image: url('../img/back2.jpg');
+ 
   background-size: cover;
+  
+
   font-family: 'Open Sans', sans-serif;
 }
 
 main{
   max-width: 1024px;
   margin: auto;
-  background-color: white;
+  /* background-color: black; */
   padding: 25px;
+  /* opacity: 0.5; */
+
 }
+
+#hide{
+  display: none;
+}
+
 
 h1{
   margin: 0;
   text-align: center;
   padding: 25px;
+  color: white;
+  font: 1000 5em "Montserrat", bold;
+  font-weight: bold;
 }
 
 #search{
@@ -37,4 +50,19 @@ h1{
 #result{
   width: 100%;
   resize: none;
+  background:black;
+  opacity: 0.50
+
+}
+
+#loader{
+margin-top: 10px;
+margin-left: 300px;
+/* display: none; */
+}
+
+.divider{
+  width:5px;
+  height:auto;
+  display:inline-block;
 }
