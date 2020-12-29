@@ -51,8 +51,8 @@ h1{
   width: 100%;
   resize: none;
   background:black;
-  opacity: 0.50
-
+  opacity: 0.50;
+  color: white;
 }
 
 #loader{
