@@ -4,27 +4,55 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scanner vulnérabilité web</title>
-    <link rel="stylesheet" href="static/css/master.css">
+    <link rel="stylesheet" href="static/css/master.css" >
+    <!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<!-- jQuery and JS bundle w/ Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
   </head>
   <body>
     <header>
 
     </header>
-    <main>
-        <h1>Scanner de vulnérabilité web</h1>
-        <div id="search">
-          <label for="input">URL:</label><br>
-          <input type="url" name="input" id="input" value="" placeholder="URL du site à testé..." autofocus required><br>
-          <button type="button" onclick="process()">Tester</button>
-        </div>
-        <br>
-        <textarea id="result" readonly rows="20">
 
-        </textarea>
-    </main>
+        <main>
+            <div class="container-md">
+          <p class="text-monospace">
+            <h1>SCANNER<br>
+                DE VULNERABILITE WEB</h1>
+          </p>
+            </div>
+
+              <label for="basic-url"></label>
+            <div class="container">
+
+
+              <div class="input-group mb-3" >
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Please enter url website</span>
+                </div>
+
+                <input type="url" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="input" value=""  autofocus required>
+                    
+                        <button type="button" class="btn btn-dark" onclick="process()" id="getData">Check Website</button>
+                        <div class="divider"></div>
+
+                </div>
+                
+                <button type="button" class="btn btn-dark" id="download_btn" onclick="download()" disabled>Download report</button>
+               
+            <textarea id="result" readonly rows="20"></textarea>
+            </div>
+        </main>
+
     <footer>
 
     </footer>
+    </script>
     <script src="static/js/main.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
   </body>
 </html>
