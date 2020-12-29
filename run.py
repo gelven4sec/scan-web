@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import random
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
 
@@ -105,13 +106,23 @@ def process_xss():
     res = session.get(url)
 
     soup = BeautifulSoup(res.html.html, "html.parser")
-    forms = soup.find_all("form")
+    form = soup.find_all("form")[0]
+    form_details = get_form_details(form)
 
-    # iterate over forms
-    for i, form in enumerate(forms, start=1):
-        form_details = get_form_details(form)
-        print("=" * 50, f"form #{i}", "=" * 50)
-        print(form_details)
+    # the data body we want to submit
+    data = {}
+    for input_tag in form_details["inputs"]:
+        if input_tag["type"] == "text":
+            data[input_tag["name"]] = '<p id="' + str(random.randint(0, 100)) + '">scan_xss:' + str(random.randint(0, 100)) + '</p>'
+        elif input_tag["type"] == "hidden":
+            data[input_tag["name"]] = input_tag["value"]
+
+    # join the url with the action (form request URL)
+    url_target = urljoin(url, form_details["action"])
+
+    res = session.post(url_target, data=data)
+
+    return "DEBUG"
 
 
 def get_form_details(form):
