@@ -110,7 +110,7 @@ def process_xss():
     # iterate over forms
     for i, form in enumerate(forms, start=1):
         form_details = get_form_details(form)
-        # print("=" * 50, f"form #{i}", "=" * 50)
+        print("=" * 50, f"form #{i}", "=" * 50)
         print(form_details)
 
 
