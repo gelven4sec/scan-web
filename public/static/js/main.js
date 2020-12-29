@@ -7,16 +7,16 @@ function process() {
   var regex = new RegExp(expression);
 
   if (text.match(regex)) {
-    //AJAX
+    //AJAX SQLi
     let request = new XMLHttpRequest();
     request.open('POST', 'process');
     request.onreadystatechange = function(){
 	     if(request.readyState === 4){
          let response = request.responseText;
          let result = document.getElementById('result');
-         result.innerHTML = response;
-         remove_gif();
-         enable_download();
+         result.innerHTML = response + "\r\nWaiting for XSS scan process...";
+
+         scan_xss(text);
 	     }
     };
 
@@ -24,7 +24,7 @@ function process() {
     request.send("url="+text);
 
     let result = document.getElementById('result');
-    result.innerHTML = "Waiting for process...";
+    result.innerHTML = "Waiting for SQLi scan process...";
     load_gif();
 
 
@@ -72,4 +72,25 @@ function download() {
 function enable_download(){
   let download = document.getElementById("download_btn");
   download.removeAttribute("disabled");
+}
+
+function scan_xss(text) {
+  //AJAX XSS
+  let request = new XMLHttpRequest();
+  request.open('POST', 'process_xss');
+  request.onreadystatechange = function(){
+    if(request.readyState === 4){
+      let response = request.responseText;
+      let result = document.getElementById('result');
+      let old_text = result.innerHTML;
+      result.innerHTML = old_text + "\r\n" + response;
+
+      //END
+      remove_gif();
+      enable_download();
+    }
+  };
+
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send("url="+text);
 }
