@@ -11,7 +11,7 @@ function process() {
     let request = new XMLHttpRequest();
     request.open('POST', 'process');
     request.onreadystatechange = function(){
-	     if(request.readyState == 4){
+	     if(request.readyState === 4){
          let response = request.responseText;
          let result = document.getElementById('result');
          result.innerHTML = response;
@@ -35,10 +35,11 @@ function process() {
 }
 
 function load_gif(){
+  console.log("DEBUG");
   var img = document.createElement("img");
   img.src = "static/img/ajaxLoader.gif";
   img.alt = "wait for scan...";
-	img.id = "gif_loader";
+  img.id = "gif_loader";
 
   document.body.appendChild(img);
 }
