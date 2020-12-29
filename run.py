@@ -26,7 +26,7 @@ def server_static_file(filepath):
 
 
 # SQLi injection scanner function called from AJAX on client
-@app.post('/process')
+@app.post('/process_sqli')
 def process_scan():
     # get url from POST method
     url = request.forms.get('url')
@@ -57,7 +57,7 @@ def process_scan():
     try:
         f = open("/root/.sqlmap/output/" + target + "/log", 'r')
     except:
-        return 'Target not vulnerable to SQL Injection ! : Code 3'
+        return 'Target not vulnerable to SQL Injection !'
 
     # save content and close file
     result = f.read()
@@ -68,7 +68,7 @@ def process_scan():
 
     # if file content is empty, means no param were injectable
     if len(result) == 0:
-        return 'Target not vulnerable to SQL Injection ! : Code 4'
+        return 'Target not vulnerable to SQL Injection !'
 
     # clean sqlmap directory to cause result will be saved somewhere else
     os.system("sqlmap --purge")
@@ -88,13 +88,13 @@ def process_xss():
         try:
             code = urlopen("http://" + url).getcode()
         except:
-            return 'Invalid target or offline : Code 1'
+            return 'Invalid target or offline'
     else:
         # check if target is enable
         try:
             code = urlopen(url).getcode()
         except:
-            return 'Invalid target or offline: Code 2'
+            return 'Invalid target or offline'
 
     if code != 200:
         return 'Invalid target or offline'
@@ -113,7 +113,8 @@ def process_xss():
     data = {}
     for input_tag in form_details["inputs"]:
         if input_tag["type"] == "text":
-            data[input_tag["name"]] = '<p id="' + str(random.randint(0, 100)) + '">scan_xss:' + str(random.randint(0, 100)) + '</p>'
+            data[input_tag["name"]] = '<p id="' + str(random.randint(0, 100)) + '">scan_xss:' + str(
+                random.randint(0, 100)) + '</p>'
         elif input_tag["type"] == "hidden":
             data[input_tag["name"]] = input_tag["value"]
 

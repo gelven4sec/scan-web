@@ -9,14 +9,14 @@ function process() {
   if (text.match(regex)) {
     //AJAX SQLi
     let request = new XMLHttpRequest();
-    request.open('POST', 'process');
+    request.open('POST', 'process_xss');
     request.onreadystatechange = function(){
 	     if(request.readyState === 4){
          let response = request.responseText;
          let result = document.getElementById('result');
          result.innerHTML = response + "\r\nWaiting for XSS scan process...";
 
-         scan_xss(text);
+         //scan_xss(text);
 	     }
     };
 
