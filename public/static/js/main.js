@@ -9,14 +9,14 @@ function process() {
   if (text.match(regex)) {
     //AJAX SQLi
     let request = new XMLHttpRequest();
-    request.open('POST', 'process_xss');
+    request.open('POST', 'process');
     request.onreadystatechange = function(){
 	     if(request.readyState === 4){
          let response = request.responseText;
          let result = document.getElementById('result');
-         result.innerHTML = response + "\r\nWaiting for XSS scan process...";
+         result.innerHTML = "========================== SQLi ==========================\r\n" + response + "\r\nWaiting for XSS scan process...";
 
-         //scan_xss(text);
+         scan_xss(text);
 	     }
     };
 
@@ -26,6 +26,7 @@ function process() {
     let result = document.getElementById('result');
     result.innerHTML = "Waiting for SQLi scan process...";
     load_gif();
+    disable_scan();
 
 
   } else {
@@ -83,14 +84,26 @@ function scan_xss(text) {
       let response = request.responseText;
       let result = document.getElementById('result');
       let old_text = result.innerHTML;
-      result.innerHTML = old_text + "\r\n" + response;
+      let tmp = old_text.split("\r\n")
+      result.innerHTML = tmp[0] + "\r\n" + "========================== XSS ==========================\r\n" + response;
 
       //END
       remove_gif();
       enable_download();
+      enable_scan();
     }
   };
 
   request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   request.send("url="+text);
+}
+
+function disable_scan() {
+  let check = document.getElementById("getData");
+  check.setAttribute("disabled", "true");
+}
+
+function enable_scan() {
+  let check = document.getElementById("getData");
+  check.removeAttribute("disabled");
 }

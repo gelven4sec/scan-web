@@ -26,7 +26,7 @@ def server_static_file(filepath):
 
 
 # SQLi injection scanner function called from AJAX on client
-@app.post('/process_sqli')
+@app.post('/process')
 def process_scan():
     # get url from POST method
     url = request.forms.get('url')
