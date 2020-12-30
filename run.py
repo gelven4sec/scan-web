@@ -51,7 +51,7 @@ def process_scan():
         return 'Invalid target or offline'
 
     # start scan with sqlmap
-    os.system("sqlmap -u \'" + url + "\' --crawl=1 --batch --forms --technique=BE")
+    os.system("sqlmap -u \'" + url + "\' --crawl=1 --batch --forms --technique=E")
 
     # if this fail, sqlmap didn't found a form so it didn't even created the directory
     try:

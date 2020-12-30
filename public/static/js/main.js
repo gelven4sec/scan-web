@@ -85,6 +85,7 @@ function scan_xss(text) {
       let result = document.getElementById('result');
       let old_text = result.innerHTML;
       let tmp = old_text.split("\r\n")
+      console.log(tmp);
       result.innerHTML = tmp[0] + "\r\n" + "========================== XSS ==========================\r\n" + response;
 
       //END
