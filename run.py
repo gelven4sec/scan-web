@@ -6,7 +6,7 @@ import random
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
 
-from bottle import Bottle, run, static_file, request
+from bottle import Bottle, run, static_file, request, response
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 
@@ -28,6 +28,11 @@ def server_static_file(filepath):
 # SQLi injection scanner function called from AJAX on client
 @app.post('/process')
 def process_scan():
+    
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+    
     # get url from POST method
     url = request.forms.get('url')
 
@@ -77,6 +82,11 @@ def process_scan():
 
 @app.post('/process_xss')
 def process_xss():
+    
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+    
     # get url from POST method
     url = request.forms.get('url')
 
