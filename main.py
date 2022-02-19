@@ -16,23 +16,22 @@ app = Bottle()
 # send main web page
 @app.route('/')
 def server_static(filepath="index.html"):
-    return static_file(filepath, root='/home/pi/scan-web/public/')
+    return static_file(filepath, root='public/')
 
 
 # send static files(css, js, img, etc...)
 @app.route('/static/<filepath:path>')
 def server_static_file(filepath):
-    return static_file(filepath, root='/home/pi/scan-web/public/static/')
+    return static_file(filepath, root='public/static/')
 
 
 # SQLi injection scanner function called from AJAX on client
 @app.post('/process')
 def process_scan():
-    
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
-    
+
     # get url from POST method
     url = request.forms.get('url')
 
@@ -42,7 +41,7 @@ def process_scan():
     if target is None:
         target = url
         try:
-            code = urlopen("http://" + url).getcode()
+            code = urlopen(f"http://{url}").getcode()
         except:
             return 'Invalid target or offline : Code 1'
     else:
@@ -60,7 +59,7 @@ def process_scan():
 
     # if this fail, sqlmap didn't found a form so it didn't even created the directory
     try:
-        f = open("/root/.sqlmap/output/" + target + "/log", 'r')
+        f = open(f"{os.path.expanduser('~')}/.sqlmap/output/{target}/log", 'r')
     except:
         return 'Target not vulnerable to SQL Injection !'
 
@@ -82,11 +81,10 @@ def process_scan():
 
 @app.post('/process_xss')
 def process_xss():
-    
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
-    
+
     # get url from POST method
     url = request.forms.get('url')
 
@@ -167,4 +165,5 @@ def get_form_details(form):
     return details
 
 
-run(app, host='0.0.0.0', port=2323, debug=True)
+if __name__ == "__main__":
+    run(app, host='0.0.0.0', port=2323, debug=True)
