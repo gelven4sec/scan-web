@@ -2,7 +2,7 @@
 
 ## Setup
 ```sh
-git clone git@github.com:sven-eliasen/scan-web.git`
+git clone git@github.com:sven-eliasen/scan-web.git
 cd scan-web
 python3 -m venv venv
 source venv/bin/activate
