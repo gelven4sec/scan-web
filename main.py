@@ -59,7 +59,7 @@ def process_scan():
 
     # if this fail, sqlmap didn't found a form so it didn't even created the directory
     try:
-        f = open(f"{os.path.expanduser('~')}/.sqlmap/output/{target}/log", 'r')
+        f = open(f"{os.path.expanduser('~')}/.local/share/sqlmap/output/{target}/log", 'r')
     except:
         return 'Target not vulnerable to SQL Injection !'
 
