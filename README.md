@@ -11,5 +11,6 @@ pip install -r requirements.txt
 
 ## Run
 ```sh
+source venv/bin/activate # If not already in
 python main.py
 ```
