@@ -12,14 +12,15 @@ from bs4 import BeautifulSoup
 
 app = Bottle()
 
+
 # send main web page
-@app.get('/')
+@app.route('/')
 def server_static(filepath="index.html"):
     return static_file(filepath, root='public/')
 
 
 # send static files(css, js, img, etc...)
-@app.get('/static/<filepath:path>')
+@app.route('/static/<filepath:path>')
 def server_static_file(filepath):
     return static_file(filepath, root='public/static/')
 
@@ -34,7 +35,24 @@ def process_scan():
     # get url from POST method
     url = request.forms.get('url')
 
-    target = verif(url)
+    # parse input to get hostname
+    target = urlparse(url).hostname
+    # if value is None means the url input is the exact hostname
+    if target is None:
+        target = url
+        try:
+            code = urlopen(f"http://{url}").getcode()
+        except:
+            return 'Invalid target or offline : Code 1'
+    else:
+        # check if target is enable
+        try:
+            code = urlopen(url).getcode()
+        except:
+            return 'Invalid target or offline: Code 2'
+
+    if code != 200:
+        return 'Invalid target or offline'
 
     # start scan with sqlmap
     os.system("sqlmap -u \'" + url + "\' --crawl=1 --batch --forms --technique=E")
@@ -48,6 +66,9 @@ def process_scan():
     # save content and close file
     result = f.read()
     f.close()
+
+    # clean sqlmap directory
+    os.system("sqlmap --purge")
 
     # if file content is empty, means no param were injectable
     if len(result) == 0:
@@ -66,8 +87,25 @@ def process_xss():
 
     # get url from POST method
     url = request.forms.get('url')
-    
-    target = verif(url)
+
+    # parse input to get hostname
+    target = urlparse(url).hostname
+    # if value is None means the url input is the exact hostname
+    if target is None:
+        target = f"http://{url}"
+        try:
+            code = urlopen("http://" + url).getcode()
+        except:
+            return 'Invalid target or offline'
+    else:
+        # check if target is enable
+        try:
+            code = urlopen(url).getcode()
+        except:
+            return 'Invalid target or offline'
+
+    if code != 200:
+        return 'Invalid target or offline'
 
     # initialize an HTTP session
     session = HTMLSession()
@@ -76,65 +114,34 @@ def process_xss():
     res = session.get(url)
 
     soup = BeautifulSoup(res.html.html, "html.parser")
+    form = soup.find_all("form")[0]
+    form_details = get_form_details(form)
 
-    result_id = []
+    num = str(random.randint(0, 100))
+    # the data body we want to submit
+    data = {}
+    for input_tag in form_details["inputs"]:
+        if input_tag["type"] == "text":
+            data[input_tag["name"]] = '<p id="' + num + '">scan_xss:' + num + '</p>'
+        elif input_tag["type"] == "hidden":
+            data[input_tag["name"]] = input_tag["value"]
 
-    for form in soup.find_all("form"):
-        form_details = get_form_details(form)
+    # join the url with the action (form request URL)
+    url_target = urljoin(url, form_details["action"])
 
-        num = str(random.randint(0, 100))
-        # the data body we want to submit
-        data = {}
-        for input_tag in form_details["inputs"]:
-            if input_tag["type"] == "text":
-                data[input_tag["name"]] = '<p id="' + num + '">scan_xss:' + num + '</p>'
-            elif input_tag["type"] == "hidden":
-                data[input_tag["name"]] = input_tag["value"]
+    res = session.post(url_target, data=data)
 
-        # join the url with the action (form request URL)
-        url_target = urljoin(url, form_details["action"])
+    soup = BeautifulSoup(res.content, "html.parser")
+    for p in soup.find_all("p"):
+        if 'id' in p.attrs:
+            if p.attrs["id"] == num:
+                return "Target VULNERABLE to XSS injection !\r\nThe following tag has been injected:\r\n" + '<p id="' + num + '">scan_xss:' + num + '</p>'
 
-        if (form_details["method"] == "post"):
-            res = session.post(url_target, data=data)
-        else :
-            res = session.get(url_target, params=data) # ?name=caca&test=davy
-        soup = BeautifulSoup(res.content, "html.parser")
-        for p in soup.find_all("p"):
-            if 'id' in p.attrs:
-                if p.attrs["id"] == num:
-                    # TODO: retourner la list des id des formulaires vulnérables
-                    result_id.append(form_details["id"])
-                    #return "Target VULNERABLE to XSS injection !\r\nThe following tag has been injected:\r\n" + '<p id="' + num + '">scan_xss:' + num + '</p>'
+    return "Target NOT VULNERABLE to XSS injection !"
 
-    if (len(result_id) == 0):
-        return "Target NOT VULNERABLE to XSS injection !"
-    else :
-        return "Target VULNERABLE to XSS injection !\r\nList of vulnerable form :\r\n" + '\r\n'.join(result_id)
-
-def verif(url):
-    # parse input to get hostname
-    target = urlparse(url).hostname
-    # if value is None means the url input is the exact hostname
-    if target is None:
-        target = f"http://{url}"
-        try:
-            code = urlopen(target).getcode()
-        except:
-            return 'Invalid target or offline : Code 1'
-    else:
-        # check if target is enable
-        try:
-            code = urlopen(url).getcode()
-        except:
-            return 'Invalid target or offline: Code 2'
-
-    if code != 200:
-        return 'Invalid target or offline'
-    return target
 
 def get_form_details(form):
     details = {}
-    id = form.attrs.get("id").lower()
     # get the form action (requested URL)
     action = form.attrs.get("action").lower()
     # get the form method (POST, GET, DELETE, etc)
@@ -157,8 +164,8 @@ def get_form_details(form):
     details["action"] = action
     details["method"] = method
     details["inputs"] = inputs
-    details["id"] = id
     return details
+
 
 if __name__ == "__main__":
     run(app, host='0.0.0.0', port=2323, debug=True)
