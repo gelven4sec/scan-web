@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-from queue import Empty
 import random
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
@@ -104,22 +103,22 @@ def process_xss():
             if 'id' in p.attrs:
                 if p.attrs["id"] == num:
                     # TODO: retourner la list des id des formulaires vulnérables
-                    result_id += form_details["id"]
+                    result_id.append(form_details["id"])
                     #return "Target VULNERABLE to XSS injection !\r\nThe following tag has been injected:\r\n" + '<p id="' + num + '">scan_xss:' + num + '</p>'
 
     if (len(result_id) == 0):
         return "Target NOT VULNERABLE to XSS injection !"
     else :
-        return "Target VULNERABLE to XSS injection !\r\n" + '\r\n'.join(result_id)
+        return "Target VULNERABLE to XSS injection !\r\nList of vulnerable form :\r\n" + '\r\n'.join(result_id)
 
 def verif(url):
     # parse input to get hostname
     target = urlparse(url).hostname
     # if value is None means the url input is the exact hostname
     if target is None:
-        target = url
+        target = f"http://{url}"
         try:
-            code = urlopen(f"http://{url}").getcode()
+            code = urlopen(target).getcode()
         except:
             return 'Invalid target or offline : Code 1'
     else:
@@ -139,7 +138,7 @@ def get_form_details(form):
     # get the form action (requested URL)
     action = form.attrs.get("action").lower()
     # get the form method (POST, GET, DELETE, etc)
-    if (form.attrs.get("method", "get").lower() == Empty):
+    if (form.attrs.get("method", "get").lower() == ""):
         method = form.attrs.get("method", "post").lower()
     else:
         method = form.attrs.get("method", "get").lower()
