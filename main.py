@@ -166,4 +166,4 @@ def get_form_details(form):
 
 
 if __name__ == "__main__":
-    run(app, host='0.0.0.0', port=2323, debug=True)
+    run(app, host='0.0.0.0', port=2323)
